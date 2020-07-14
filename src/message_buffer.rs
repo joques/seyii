@@ -1,31 +1,31 @@
-mod messenger;
+use crate::messenger;
 
 #[derive(Debug)]
-struct MessageBuffer {
-	buff: Vec<messenger::SimpleMessage>,
+pub struct MessageBuffer<'a> {
+	buff: Vec<&'a messenger::SimpleMessage<'a>>,
 }
 
-impl MessageBuffer {
-	fn new() -> MessageBuffer {
-		MessageBuffer {
-			buff: Vec::new()
+pub fn create_buffer<'a>() -> MessageBuffer<'a> {
+	MessageBuffer {
+		buff: Vec::new()
+	}
+}
+
+pub fn add_to_buffer<'a>(mb: &mut MessageBuffer<'a>, msg: &'a messenger::SimpleMessage<'a>) {
+	mb.buff.push(msg);
+}
+
+pub fn find_message<'a>(mb: &'a MessageBuffer<'a>, message_id: u32) -> Result<&'a messenger::SimpleMessage<'a>, &str> {
+	let msg_iter = mb.buff.iter();
+
+	for msg in msg_iter {
+		if msg.mid == message_id {
+			return Ok(msg);
+		} else {
+			continue;
 		}
 	}
 
-	fn add_to_buffer(&mut self, msg: messenger::SimpleMessage) {
-		self.buff.push(msg);
-	}
-
-	fn find_message(&self, messsage_id: u32) -> Result<messenger::SimpleMessage, &str> {
-		let msg_iter = self.buff.iter();
-
-		for msg in msg_iter {
-			if messsage_id == msg.mid {
-				return Ok(msg);
-			} else {
-				continue;
-			}
-		}
-		return Err("Message not found");
-	} 
+	let err_msg: String = format!("Simple Message not found with id {}", message_id);
+	return Err("Simple Message not found!")
 }
