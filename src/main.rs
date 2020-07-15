@@ -11,10 +11,13 @@ fn main() {
     let m: messenger::SimpleMessage = messenger::create_simple_message(simple_message_count, "jose", "mom", "First message for MOM testing...");
     println!("here is the created message {:?}", m);
 
-    let mut mb: message_buffer::MessageBuffer = message_buffer::create_buffer();
+    let mut mb = message_buffer::MessageBuffer::create();
     println!(" Just created a message buffer{:?}", mb);
 
-    message_buffer::add_to_buffer(&mut mb, &m);
+    let _add_mb_res = match mb.add_to_buffer(&m) {
+    	Err(add_err) => println!("There was an error adding message {} to buffer. Details are {}", m.mid, add_err),
+    	Ok(add_ok) => println!("{:?}", add_ok),
+    };
     println!("revisiting the message buffer {:?}", mb);
 
     println!("checking borrowing rule for message m {:?}", m);
@@ -24,10 +27,13 @@ fn main() {
     let m1: messenger::SimpleMessage = messenger::create_simple_message(simple_message_count, "jose", "mom", "Second message for MOM testing...");
     println!("here is the created message {:?}", m1);
 
-    message_buffer::add_to_buffer(&mut mb, &m1);
+    let _add_mb_res = match mb.add_to_buffer(&m1) {
+    	Err(add_err) => println!("There was an error adding message {} to buffer. Details are {}",m1.mid, add_err),
+    	Ok(add_ok) => println!("{:?}", add_ok),
+    };
     println!("revisiting the message buffer {:?}", mb);
 
-    let _res = match message_buffer::find_message(&mb, 2) {
+    let _res = match mb.find_message(2) {
     	Some(m3) => println!("here is the retrieved message {:?}", m3),
     	None => println!("No such message"),
     };
