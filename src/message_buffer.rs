@@ -15,17 +15,16 @@ pub fn add_to_buffer<'a>(mb: &mut MessageBuffer<'a>, msg: &'a messenger::SimpleM
 	mb.buff.push(msg);
 }
 
-pub fn find_message<'a>(mb: &'a MessageBuffer<'a>, message_id: u32) -> Result<&'a messenger::SimpleMessage<'a>, &str> {
+pub fn find_message<'a>(mb: &'a MessageBuffer<'a>, message_id: u32) -> Option<&'a messenger::SimpleMessage<'a>> {
 	let msg_iter = mb.buff.iter();
 
 	for msg in msg_iter {
 		if msg.mid == message_id {
-			return Ok(msg);
+			return Some(msg);
 		} else {
 			continue;
 		}
 	}
-
-	let err_msg: String = format!("Simple Message not found with id {}", message_id);
-	return Err("Simple Message not found!")
+	
+	return None
 }

@@ -1,5 +1,6 @@
 mod messenger;
 mod message_buffer;
+mod message_storage;
 
 fn main() {
     println!("Welcome to SeyiI!");
@@ -27,7 +28,15 @@ fn main() {
     println!("revisiting the message buffer {:?}", mb);
 
     let _res = match message_buffer::find_message(&mb, 2) {
-    	Ok(m3) => println!("here is the retrieved message {:?}", m3),
-    	Err(em) => println!("and the error message is {:?}", em),
+    	Some(m3) => println!("here is the retrieved message {:?}", m3),
+    	None => println!("No such message"),
+    };
+
+    let mut store = message_storage::Storage::create();
+    println!("here is the new message store {:?}", store);
+
+    let _res2 = match store.store_message(&m1) {
+    	Err(errstr) => println!("An error occurred while storing message {:?}. Error message reads {}", m1, errstr),
+    	Ok(resmsg) => println!("The message storage was ok {}", resmsg),
     };
 }

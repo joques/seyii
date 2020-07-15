@@ -1,3 +1,6 @@
+/* File messenger */
+
+// Simple message for actual communication between clients
 #[derive(Debug)]
 pub struct SimpleMessage<'a> {
 	pub mid: u32,
@@ -6,6 +9,8 @@ pub struct SimpleMessage<'a> {
 	pub content: &'a str,
 }
 
+
+// generate a SimpleMessage
 pub fn create_simple_message<'a>(message_count: u32, sender: &'a str, topic: &'a str, content: &'a str) -> SimpleMessage<'a> {
 	SimpleMessage {
 		mid: message_count,
