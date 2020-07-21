@@ -1,4 +1,6 @@
-/* message_buffer.rs */ 
+/* 
+message_buffer.rs 
+*/ 
 
 use crate::messenger;
 
@@ -9,7 +11,7 @@ pub struct MessageBuffer<'a> {
 
 impl<'a> MessageBuffer<'a> {
 	pub fn create() -> Self {
-		return MessageBuffer {
+		Self {
 			buff: Vec::new()
 		}
 	}

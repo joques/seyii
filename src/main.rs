@@ -8,7 +8,7 @@ fn main() {
     println!("Creating a simple message...");
 
     let mut simple_message_count = 1;
-    let m: messenger::SimpleMessage = messenger::create_simple_message(simple_message_count, "jose", "mom", "First message for MOM testing...");
+    let m: messenger::SimpleMessage = messenger::SimpleMessage::create(simple_message_count, "jose", "mom", "First message for MOM testing...");
     println!("here is the created message {:?}", m);
 
     let mut mb = message_buffer::MessageBuffer::create();
@@ -24,7 +24,7 @@ fn main() {
 
     simple_message_count += 1;
 
-    let m1: messenger::SimpleMessage = messenger::create_simple_message(simple_message_count, "jose", "mom", "Second message for MOM testing...");
+    let m1: messenger::SimpleMessage = messenger::SimpleMessage::create(simple_message_count, "jose", "mom", "Second message for MOM testing...");
     println!("here is the created message {:?}", m1);
 
     let _add_mb_res = match mb.add_to_buffer(&m1) {
@@ -41,7 +41,7 @@ fn main() {
     let mut store = message_storage::Storage::create();
     println!("here is the new message store {:?}", store);
 
-    let _res2 = match store.store_message(&m1) {
+    let _res2 = match store.add_message("test-topic", &m1) {
     	Err(errstr) => println!("An error occurred while storing message {:?}. Error message reads {}", m1, errstr),
     	Ok(resmsg) => println!("The message storage was ok {}", resmsg),
     };

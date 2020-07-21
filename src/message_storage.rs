@@ -1,31 +1,43 @@
-/* message_storage */ 
+/* 
+message_storage.rs 
+*/ 
 
+use std::collections::HashMap;
 use crate::messenger;
+
+// should probably change the members in the struct with a hashmap
 
 #[derive(Debug)]
 pub struct Storage<'a> {
-	idents: Vec<u32>,
-	messages: Vec<&'a messenger::SimpleMessage<'a>>, 
+	store: HashMap<&'a str, Vec<&'a messenger::SimpleMessage<'a>>>
 }
 
 impl<'a> Storage<'a> {
 	pub fn create() -> Self {
-		return Storage{
-			idents: Vec::new(),
-			messages: Vec::new()
+		Self{
+			store: HashMap::new(),
 		}
 	}
 
-	pub fn store_message(&mut self, msg: &'a messenger::SimpleMessage<'a>) -> Result<&str, &str> {
-		// First check if the message has already been stored
-		if self.idents.iter().any(|&curid| curid == msg.mid) {
-			// message exists in the store return an error message
-			return Err("Message already in store");
-		} else {
-			// message not found. Will add it to store and send an ok message
-			self.idents.push(msg.mid);
-			self.messages.push(msg);
-			return Ok("New message added to store");
+	pub fn add_message(&mut self, topic: &'a str, msg: &'a messenger::SimpleMessage) -> Result<&str, &str> {
+		// first check if the topic has been stored before
+		match self.store.get_mut(topic) {
+			None => {
+				// the topic has never been inserted
+				let mut new_topic_store = Vec::new();
+				new_topic_store.push(msg);
+				self.store.insert(topic, new_topic_store);
+				Ok("Message added for new topic")
+			}
+			Some(messages) => {
+				if messages.iter().any(|cur_msg| cur_msg == msg) {
+					// the message has already been stored
+					Err("This message has already been stored for the topic")
+				} else {
+					messages.push(msg);
+					Ok("New message added for topic")
+				}
+			}
 		}
 	}
 }
