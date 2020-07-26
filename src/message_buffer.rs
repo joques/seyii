@@ -24,10 +24,11 @@ impl<'a> MessageBuffer<'a> {
 
 	// find a message from the buffer in order to share it wit iots in case of message loss
 	pub fn find_message(&self, message_id: u32) -> Option<&'a messenger::SimpleMessage<'a>> {
+		let full_message_id = format!("s-msg-{}", message_id);
 		let msg_iter = self.buff.iter();
 
 		for  msg in msg_iter {
-			if msg.mid == message_id {
+			if msg.mid == full_message_id {
 				return Some(msg);
 			} else {
 				continue;
